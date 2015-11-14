@@ -1,0 +1,65 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chromatic Tuner", "Chromatic Tuner\Chromatic Tuner.csproj", "{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{199D5E43-5DB0-41F6-914E-AC561501B2DA} = {199D5E43-5DB0-41F6-914E-AC561501B2DA}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioProcessing", "RuntimeComponent1\AudioProcessing.csproj", "{199D5E43-5DB0-41F6-914E-AC561501B2DA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM = Debug|ARM
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|ARM = Release|ARM
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Debug|ARM.ActiveCfg = Debug|ARM
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Debug|ARM.Build.0 = Debug|ARM
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Debug|ARM.Deploy.0 = Debug|ARM
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Debug|x64.ActiveCfg = Debug|x64
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Debug|x64.Build.0 = Debug|x64
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Debug|x64.Deploy.0 = Debug|x64
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Debug|x86.ActiveCfg = Debug|x86
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Debug|x86.Build.0 = Debug|x86
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Debug|x86.Deploy.0 = Debug|x86
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Release|Any CPU.ActiveCfg = Release|x86
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Release|ARM.ActiveCfg = Release|ARM
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Release|ARM.Build.0 = Release|ARM
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Release|ARM.Deploy.0 = Release|ARM
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Release|x64.ActiveCfg = Release|x64
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Release|x64.Build.0 = Release|x64
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Release|x64.Deploy.0 = Release|x64
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Release|x86.ActiveCfg = Release|x86
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Release|x86.Build.0 = Release|x86
+		{6DEBC381-63FF-4C81-8DAC-745975E9DC0B}.Release|x86.Deploy.0 = Release|x86
+		{199D5E43-5DB0-41F6-914E-AC561501B2DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{199D5E43-5DB0-41F6-914E-AC561501B2DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{199D5E43-5DB0-41F6-914E-AC561501B2DA}.Debug|ARM.ActiveCfg = Debug|ARM
+		{199D5E43-5DB0-41F6-914E-AC561501B2DA}.Debug|ARM.Build.0 = Debug|ARM
+		{199D5E43-5DB0-41F6-914E-AC561501B2DA}.Debug|x64.ActiveCfg = Debug|x64
+		{199D5E43-5DB0-41F6-914E-AC561501B2DA}.Debug|x64.Build.0 = Debug|x64
+		{199D5E43-5DB0-41F6-914E-AC561501B2DA}.Debug|x86.ActiveCfg = Debug|x86
+		{199D5E43-5DB0-41F6-914E-AC561501B2DA}.Debug|x86.Build.0 = Debug|x86
+		{199D5E43-5DB0-41F6-914E-AC561501B2DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{199D5E43-5DB0-41F6-914E-AC561501B2DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{199D5E43-5DB0-41F6-914E-AC561501B2DA}.Release|ARM.ActiveCfg = Release|ARM
+		{199D5E43-5DB0-41F6-914E-AC561501B2DA}.Release|ARM.Build.0 = Release|ARM
+		{199D5E43-5DB0-41F6-914E-AC561501B2DA}.Release|x64.ActiveCfg = Release|x64
+		{199D5E43-5DB0-41F6-914E-AC561501B2DA}.Release|x64.Build.0 = Release|x64
+		{199D5E43-5DB0-41F6-914E-AC561501B2DA}.Release|x86.ActiveCfg = Release|x86
+		{199D5E43-5DB0-41F6-914E-AC561501B2DA}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

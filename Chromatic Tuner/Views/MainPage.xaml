@@ -1,0 +1,28 @@
+﻿<Page
+    x:Class="Chromatic_Tuner.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Behaviors="using:Template10.Behaviors"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:controls="using:Template10.Controls"
+    xmlns:local="using:Chromatic_Tuner.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Chromatic_Tuner.ViewModels" mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <RelativePanel>
+            <StackPanel Name="Display" Height="Auto" Margin="0,300,0,0" Padding="0,0,0,50" RelativePanel.AlignHorizontalCenterWith="recordStopButton" BorderThickness="1" BorderBrush="Black">
+                <Polyline x:Name="Oscilloscope" Stroke="#FF0000" StrokeThickness="1" Points="0,200,1500,200"/>
+            </StackPanel>
+            <TextBlock Name="StartText" RelativePanel.Above="recordStopButton" RelativePanel.AlignHorizontalCenterWith="testFFT" Text="Page Loaded!!" FontSize="30"></TextBlock>
+            <Image Source="Assets\untitled.png" RelativePanel.AlignHorizontalCenterWith="Display"></Image>
+            <Button Name="recordStopButton" Content="Play" RelativePanel.Above="testFFT" RelativePanel.AlignHorizontalCenterWith="testFFT" Click="RecordStopButton_Click"></Button>
+            <Button Name="testFFT" Content="TEST FFT" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignBottomWithPanel="True" Click="testFFT_Click" Margin="20"></Button>
+            <TextBox Name="frequencyBox" RelativePanel.AlignHorizontalCenterWith="testFFT"></TextBox>
+            <TextBox Name="samplesBox" RelativePanel.AlignHorizontalCenterWith="testFFT" RelativePanel.Below="frequencyBox"></TextBox>
+        </RelativePanel>
+    </Grid>
+
+</Page>
