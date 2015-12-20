@@ -17,7 +17,7 @@
                 <Polyline x:Name="Oscilloscope" Stroke="#FF0000" StrokeThickness="1" Points="0,200,1500,200"/>
             </StackPanel>
             <TextBlock Name="StartText" RelativePanel.Above="recordStopButton" RelativePanel.AlignHorizontalCenterWith="testFFT" Text="Page Loaded!!" FontSize="30"></TextBlock>
-            <Image Source="Assets\untitled.png" RelativePanel.AlignHorizontalCenterWith="Display"></Image>
+            <Image Source="/Assets/Untitled.png" RelativePanel.AlignHorizontalCenterWith="Display" RelativePanel.Below="Display" Margin="10,0"/>
             <Button Name="recordStopButton" Content="Play" RelativePanel.Above="testFFT" RelativePanel.AlignHorizontalCenterWith="testFFT" Click="RecordStopButton_Click"></Button>
             <Button Name="testFFT" Content="TEST FFT" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignBottomWithPanel="True" Click="testFFT_Click" Margin="20"></Button>
             <TextBox Name="frequencyBox" RelativePanel.AlignHorizontalCenterWith="testFFT"></TextBox>

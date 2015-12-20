@@ -7,7 +7,7 @@ namespace AudioProcessing
     public sealed class FFT2
     {
 
-        public IList<float> run(IList<float> points)
+        public IList<float> Run(IList<float> points)
         {
 
             List<Complex> pointsw = new List<Complex>();
@@ -17,10 +17,10 @@ namespace AudioProcessing
                 pointsw.Add(points[i]);
             }
 
-            fft(pointsw);
+            FFT(pointsw);
 
-
-            for (int i = 0; i < points.Count; i++)
+            // Get the real signal, from only the first half of the complex points
+            for (int i = 0; i < points.Count / 2; i++)
             {
                 points[i] = (float)pointsw[i].Magnitude;
             }
@@ -28,7 +28,7 @@ namespace AudioProcessing
             return points;
         }
 
-        private void fft(List<Complex> x)
+        private void FFT(List<Complex> x)
         {
             int N = x.Count;
             if (N <= 1) return;
@@ -44,8 +44,8 @@ namespace AudioProcessing
             }
 
             // conquer
-            fft(even);
-            fft(odd);
+            FFT(even);
+            FFT(odd);
 
             // combine
             for (int k = 0; k < N / 2; ++k)

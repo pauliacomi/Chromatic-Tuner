@@ -23,24 +23,31 @@ namespace Chromatic_Tuner.Views
         private AudioGraph graph;
         private AudioDeviceInputNode deviceInputNode;
         private AudioFrameOutputNode frameOutputNode;
+
+        // Declare the custom classes
         private FFT2 freqAnalyzer = new FFT2();
         private AudioMemoryBuffer audioProcessing = new AudioMemoryBuffer();
-        private IList<float> points = new List<float>();
+
+        // Use an IList to store the points
+        private List<float> pointsf = new List<float>();
 
         // Timer that would update the Oscilloscope
         private DispatcherTimer timer = new DispatcherTimer();
-        private List<float> pointsf = new List<float>();
-
+        
+        // Sizes of the oscilloscope
         private int OSC_START_Y = 200;
         private int OSC_HEIGHT = 200;
         private int OSC_LENGTH = 1500;
+
+        // Audio properties
         private int desiredSamples = 4096;
         private float uppercut = 10000;
         private float lowercut = 50;
         private float quantumDuration;
-        private float uppercutp;
-        private float lowercutp;
-        private uint logn;
+        private float uppercutPoint;
+        private float lowercutPoint;
+        private uint sizePowerOf2Log;
+        private uint sizePowerOf2Int;
         private int size;
         private bool ready = true;
 
@@ -63,9 +70,10 @@ namespace Chromatic_Tuner.Views
             await CreateAudioGraph();
             InitializeTimer();
 
+            // Make sure that there are at least two points in the storage array
+            pointsf.Add(0);
+            pointsf.Add(0);
 
-            // TEMP
-            timer.Start();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -99,9 +107,6 @@ namespace Chromatic_Tuner.Views
         {
             timer.Interval = TimeSpan.FromSeconds(0.1);
             timer.Tick += updateGraph;
-
-            pointsf.Add(0);
-            pointsf.Add(0);
         }
 
         // Create the AudioGraph
@@ -120,7 +125,6 @@ namespace Chromatic_Tuner.Views
                 ShowErrorMessage(string.Format("AudioGraph Creation Error because {0}", result.Status.ToString()));
                 return;
             }
-
             graph = result.Graph;
 
 
@@ -133,7 +137,6 @@ namespace Chromatic_Tuner.Views
                 ShowErrorMessage(string.Format("Audio Device Input unavailable because {0}", deviceInputNodeResult.Status.ToString()));
                 return;
             }
-
             deviceInputNode = deviceInputNodeResult.DeviceInputNode;
 
             
@@ -166,25 +169,32 @@ namespace Chromatic_Tuner.Views
         {
             if (Math.IEEERemainder(graph.CompletedQuantumCount,10) == 0)
             {
-                // Ensure that points are reset
-                points.Clear();
+                IList<float> points = new List<float>();
 
+                // Get the required properties and fill points array
                 sampleRate = graph.EncodingProperties.SampleRate;
-
                 AudioFrame frame = frameOutputNode.GetFrame();
 
-                points = audioProcessing.ProcessFrameOutput(frame);
+                // Get the buffer into the point collection
+                try
+                {
+                    points = audioProcessing.ProcessFrameOutput(frame);
+                }
+                catch (Exception e)
+                {
+                    ShowErrorMessage(e.Message);
+                }
 
                 size = points.Count();
 
-                if (size != 0 && size < 10000)
+                if (size != 0)
                 {
-                    logn = GetNextPowerOf2((uint)size);
-                    quantumDuration = (float)Math.Pow(2, logn) / sampleRate;
-                    uppercutp = (float)Math.Round(uppercut * quantumDuration);
-                    lowercutp = (float)Math.Round(lowercut * quantumDuration);
+                    sizePowerOf2Log = GetNextPowerOf2((uint)size);
+                    quantumDuration = (float)Math.Pow(2, sizePowerOf2Log) / sampleRate;
+                    uppercutPoint = (float)Math.Round(uppercut * quantumDuration);
+                    lowercutPoint = (float)Math.Round(lowercut * quantumDuration);
 
-                    size = (int)Math.Pow(2, logn);
+                    size = (int)Math.Pow(2, sizePowerOf2Log);
 
                     while (points.Count() < size)
                     {
@@ -192,19 +202,17 @@ namespace Chromatic_Tuner.Views
                     }
                     
                     // Perform FFT on quantum
-                    points = freqAnalyzer.run(points);
+                    points = freqAnalyzer.Run(points);
 
-                    //// Remove upper and lower limits MUST BE REDONE!!!!!!!!
-                    //for (int i = 0; i < (uppercutp-lowercutp); i++)
-                    //{
-                    //    points[i] = points[i + (int)lowercutp];
-                    //}
-                    //while(points.Count() > uppercutp - lowercutp)
-                    //{
-                    //    points.RemoveAt(points.Count()-1);
-                    //}
-
-                    size = points.Count();
+                    //Remove upper and lower limits
+                    for (int i = 0; i < (uppercutPoint - lowercutPoint); i++)
+                    {
+                        points[i] = points[i + (int)lowercutPoint];
+                    }
+                    while (points.Count() > uppercutPoint - lowercutPoint)
+                    {
+                        points.RemoveAt(points.Count() - 1);
+                    }
 
                     // Normalize the points
                     float mh = points.Max();
@@ -212,7 +220,7 @@ namespace Chromatic_Tuner.Views
 
                     if ((mh - mg) / size > 0.001)
                     {
-                        for (int i = 0; i < size; i++)
+                        for (int i = 0; i < points.Count; i++)
                         {
                             points[i] = points[i] * size / (mh * 2);
                         }
@@ -225,60 +233,100 @@ namespace Chromatic_Tuner.Views
                         pointsf.AddRange(points);
                     }
                 }
-
             }
         }
 
 
         private void testFFT_Click(object sender, RoutedEventArgs e)
         {
-            // Ensure that points are reset
-            points.Clear();
+            timer.Start();
+
+            // Generate the points array
+            IList<float> points = new List<float>();
 
             // Get input data
             frequency = float.Parse(frequencyBox.Text);
             size = int.Parse(samplesBox.Text);
 
             // Calculate variables
-            logn = GetNextPowerOf2((uint)size);
-            quantumDuration = (float)Math.Pow(2, logn) / sampleRate;
-            uppercutp = (float)Math.Round(uppercut * quantumDuration);
-            lowercutp = (float)Math.Round(lowercut * quantumDuration);
+            sizePowerOf2Log = GetNextPowerOf2((uint)size);
+            sizePowerOf2Int = (uint)Math.Pow(2, sizePowerOf2Log);
+            quantumDuration = (float)Math.Pow(2, sizePowerOf2Log) / sampleRate;
+            uppercutPoint = (float)Math.Round(uppercut * quantumDuration);
+            lowercutPoint = (float)Math.Round(lowercut * quantumDuration);
 
             // Generate control
             for (int i = 0; i < size; i++)
             {
-                if(Math.Sin(2 * Math.PI * i * frequency / sampleRate) < 0)
-                {
-                    points.Add(-1);
-                }
-                else
-                {
-                    points.Add(1);
-                }
-                //points.Add((float)Math.Sin(2 * Math.PI * frequency * i / sampleRate));
+                //// Square wave
+                //if(Math.Sin(2 * Math.PI * i * frequency / sampleRate) < 0)
+                //{
+                //    points.Add(-1);
+                //}
+                //else
+                //{
+                //    points.Add(1);
+                //}
+
+                // Sine wave
+                points.Add((float)Math.Sin(2 * Math.PI * frequency * i / sampleRate));
             }
 
             // Pad with zeroes
-            while (points.Count() < Math.Pow(2, logn))
+            for (int i = points.Count(); i < sizePowerOf2Int; i++)
             {
                 points.Add(0);
             }
 
             // Perform FFT on quantum
-            points = freqAnalyzer.run(points);
+            points = freqAnalyzer.Run(points);
+
+            //Remove upper and lower limits
+            for (int i = 0; i < (uppercutPoint - lowercutPoint); i++)
+            {
+                points[i] = points[i + (int)lowercutPoint];
+            }
+            while (points.Count() > uppercutPoint - lowercutPoint)
+            {
+                points.RemoveAt(points.Count() - 1);
+            }
+
+            // Normalize the points
+            float mh = points.Max();
+            float mg = points.Min();
+
+            if ((mh - mg) / size > 0.001)
+            {
+                for (int i = 0; i < points.Count; i++)
+                {
+                    points[i] = points[i] * size / (mh * 2);
+                }
+            }
 
             // Store results
-            pointsf.Clear();
-            pointsf.AddRange(points);
+            if (ready)
+            {
+                pointsf.Clear();
+                pointsf.AddRange(points);
+            }
         }
 
 
         // Function to write a collection of points to the line visualiser
         private async void updateGraph(object sender, object e)
         {
+            //Random r = new Random();
+            //pointsf.Clear();
+
+            //for (int i = 0; i < 1000; i++)
+            //{
+            //    pointsf.Add(r.Next(100) / 50);
+            //}
+
+            ready = false;
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
+
                 int oscSize = Oscilloscope.Points.Count();
                 int colSize = pointsf.Count();
 
@@ -293,10 +341,10 @@ namespace Chromatic_Tuner.Views
                     else
                     {
                         // Arrange x's with regards to the logarithm
-                        p.X =( Math.Log(i+1) / Math.Log(colSize)) * OSC_LENGTH;
+                        p.X = (Math.Log(i + 1) / Math.Log(colSize)) * OSC_LENGTH;
                     }
 
-                    p.Y = OSC_START_Y - (OSC_HEIGHT * 2 * pointsf[i] / Math.Pow(2, logn));
+                    p.Y = OSC_START_Y - (OSC_HEIGHT * 2 * pointsf[i] / Math.Pow(2, sizePowerOf2Log));
 
                     if (i < oscSize)
                     {
@@ -308,6 +356,7 @@ namespace Chromatic_Tuner.Views
                     }
                 }
             });
+            ready = true;
         }
 
 

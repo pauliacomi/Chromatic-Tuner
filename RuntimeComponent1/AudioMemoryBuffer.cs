@@ -16,7 +16,6 @@ namespace AudioProcessing
         void GetBuffer(out byte* buffer, out uint capacity);
     }
 
-
     public sealed class AudioMemoryBuffer
     {
         //Look into the data bit by bit
